@@ -1,0 +1,87 @@
+#!/bin/sh
+
+# Date format used in dump filename. Default is : dd-mm-YYYY-HHMM
+CLEARDATE=$(date +%d)-$(date +%m)-$(date +%Y)-$(date +%H)$(date +%M)
+
+# Log's file
+LOGFILE="/var/log/mysqldump2nextcloud.log"
+
+# Dump's local directory
+LOCALDUMPSDIR=""
+
+# Dump's lifetime in minute. All dumps created at least $EXPIRATION minutes ago will be deleted.
+EXPIRATION=120
+
+# Dump's lifetime in days. All dumps created at least $EXPIRATIONDAILY days ago will be deleted.
+EXPIRATIONDAILY=3
+
+# Nextcloud server URL
+NCURL=""
+
+# Dump's remote directory. Do not write root slash. i.e : "directory/subdirectory".
+NCUPLOADDIR=""
+
+# Nextcloud user's credentials (login and password)
+NCLOGIN=""
+NCPASS=""
+
+# Database informations
+DBNAME=""
+DBSERVER=""
+DBUSER=""
+DBPASS=""
+DBPORT=""
+
+echo "$(date --rfc-3339=second) mysqldump2nextcloud started" >> $LOGFILE
+
+## Testing if dump's local directory exists. Create it if needed.
+if [ ! -d "$LOCALDUMPSDIR" ]; then
+    echo "$(date --rfc-3339=second) ${LOCALDUMPSDIR} does not exist. Creating it" >> $LOGFILE
+    mkdir -p $LOCALDUMPSDIR
+fi
+
+## Deletion of dumps.
+# If mysql2nextcloud is called with the parameter "daily", all dumps file created $EXPIRATION minutes ago are deleted.
+# Else, just other dumps thant "daily dumps" are deleted.
+if [ $1 ] && [ $1 = "daily" ]; then
+    find $LOCALDUMPSDIR -type f -name '*-daily.sql.gz' -cmin +$EXPIRATIONDAILY -delete
+else
+    find $LOCALDUMPSDIR -type f -name '*.sql.gz' ! -name "*-daily.sql.gz" -cmin +$EXPIRATIONDAILY -delete
+fi
+
+## Dump creation
+# Defining dump filename. If mysql2nextcloud is called with the parameter "daily", this word is added in the dump filename.
+if [ $1 ] && [ $1 = "daily" ]; then
+    DUMPNAME="${DBNAME}.${CLEARDATE}-${1}.sql"
+else
+    DUMPNAME="${DBNAME}.${CLEARDATE}.sql"
+fi
+
+echo "$(date --rfc-3339=second) Doing mysql dumps" >> $LOGFILE
+mysqldump -h${DBSERVER} -u${DBUSER} --password=${DBPASS} -P$DBPORT $DBNAME > $LOCALDUMPSDIR/$DUMPNAME
+
+if [ $? -eq 0 ]; then
+    echo "$(date --rfc-3339=second) Dump successfully done : ${DUMPNAME}" >> $LOGFILE
+
+    ## Doing gzip compression on dump file
+    echo "$(date --rfc-3339=second) Doing gzip compression" >> $LOGFILE
+    gzip $LOCALDUMPSDIR/$DUMPNAME
+
+    if [ $? -eq 0 ]; then
+        echo "$(date --rfc-3339=second) gzip compression done" >> $LOGFILE
+
+        ## Nextcloud synchronisation
+        echo "$(date --rfc-3339=second) Uploading to Nextcloud server" >> $LOGFILE
+        nextcloudcmd -s -u $NCLOGIN -p $NCPASS $LOCALDUMPSDIR $NCURL/remote.php/webdav/$NCUPLOADDIR
+
+        if [ $? -eq 0 ]; then
+            echo "$(date --rfc-3339=second) Upload successfully done : ${DUMPNAME}" >> $LOGFILE
+        else
+            echo "$(date --rfc-3339=second) Error while uploading dump file. nextcloudcmd returned ${?}" >> $LOGFILE
+        fi
+    else
+        echo "$(date --rfc-3339=second) Error while compression the dump file. gzip returned ${?}" >> $LOGFILE
+    fi
+else
+    echo "$(date --rfc-3339=second) Error while dumping the databse. mysqldump returned ${?}" >> $LOGFILE
+fi
