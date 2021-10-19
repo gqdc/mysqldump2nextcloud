@@ -8,7 +8,7 @@ A bash script which do mysqldump(s) and upload it to a nextcloud server.
 cd /usr/local/share
 git clone https://github.com/gqdc/mysqldump2nextcloud.git
 ```
-3. Open /usr/local/share/mysqldump2nextcloud.sh file, and fill in ALL the empty variables.
+3. Open /usr/local/share/mysqldump2nextcloud file, and fill in ALL the empty variables.
 4. Make the script executable :
 `chmod +X /usr/local/share/mysqdump2nextcloud/mysqldump2nextcloud`
 6. Run the script and correct any errors.
