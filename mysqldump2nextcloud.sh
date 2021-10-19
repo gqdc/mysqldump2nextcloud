@@ -7,7 +7,7 @@ CLEARDATE=$(date +%d)-$(date +%m)-$(date +%Y)-$(date +%H)$(date +%M)
 LOGFILE="/var/log/mysqldump2nextcloud.log"
 
 # Dump's local directory
-LOCALDUMPSDIR=""
+LOCALDUMPSDIR="/usr/local/share/mysqldump2nextcloud/dumps"
 
 # Dump's lifetime in minute. All dumps created at least $EXPIRATION minutes ago will be deleted.
 EXPIRATION=120
