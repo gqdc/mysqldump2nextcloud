@@ -18,7 +18,9 @@ EXPIRATIONDAILY=3
 # Nextcloud server URL
 NCURL=""
 
-# Dump's remote directory. Do not write root slash. i.e : "directory/subdirectory".
+# Dump's remote directory
+# The remote directory MUST exists.
+# Do not write root slash. i.e : "directory/subdirectory".
 NCUPLOADDIR=""
 
 # Nextcloud user's credentials (login and password)
