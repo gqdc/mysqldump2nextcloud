@@ -24,3 +24,7 @@ The daily backups will be deleted every $EXPIRATIONDAILY days, while "classic" d
 That means with default values for $EXPIRATIONDAILY and $EXPIRATION, after a week of execution, your backup folder will contains :
     - 5 "classics" dumps M+0, M+30, M+60, M+90, M+120
     - 4 "daily" dumps : D+3, D+2, D+1, D+0
+
+## Advices
+nextcloudcmd has actullay a speed problem when it uses classis user/password auth method (oc_authtoken table will increase, and connection time will increase too).
+To avoid that, use an "application password".
