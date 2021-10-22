@@ -4,7 +4,8 @@
 CLEARDATE=$(date +%d)-$(date +%m)-$(date +%Y)-$(date +%H)$(date +%M)
 
 # Log's file
-LOGFILE="/var/log/mysqldump2nextcloud/mysqldump2nextcloud.log"
+LOGDIR="/usr/local/share/mysqldump2nextcloud/log"
+LOGFILE="${LOGDIR}/mysqldump2nextcloud.log"
 
 # Dump's local directory
 LOCALDUMPSDIR="/usr/local/share/mysqldump2nextcloud/dumps"
@@ -33,6 +34,12 @@ DBSERVER=""
 DBUSER=""
 DBPASS=""
 DBPORT=""
+
+## Testing if logs's directory exists. Create it if needed.
+if [ ! -d "$LOGDIR" ]; then
+    mkdir -p $LOGDIR
+    echo "$(date --rfc-3339=second) ${LOGDIR} did not exist. Created it" >> $LOGFILE
+fi
 
 echo "$(date --rfc-3339=second) mysqldump2nextcloud started" >> $LOGFILE
 
