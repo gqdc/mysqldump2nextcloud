@@ -53,9 +53,9 @@ fi
 # If mysql2nextcloud is called with the parameter "daily", all dumps file created $EXPIRATION minutes ago are deleted.
 # Else, just other dumps thant "daily dumps" are deleted.
 if [ $1 ] && [ $1 = "daily" ]; then
-    find $LOCALDUMPSDIR -type f -name '*-daily.sql.gz' -ctime +$EXPIRATIONDAILY -delete
+    find $LOCALDUMPSDIR -type f -name '*-daily.sql.gz' -atime +$EXPIRATIONDAILY -delete
 else
-    find $LOCALDUMPSDIR -type f -name '*.sql.gz' ! -name "*-daily.sql.gz" -cmin +$EXPIRATION -delete
+    find $LOCALDUMPSDIR -type f -name '*.sql.gz' ! -name "*-daily.sql.gz" -atime +$EXPIRATION -delete
 fi
 
 ## Dump creation
