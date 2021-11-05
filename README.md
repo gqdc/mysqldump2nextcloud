@@ -16,7 +16,7 @@ git clone https://github.com/gqdc/mysqldump2nextcloud.git
 `*/30 * * * * /usr/local/share/mysqdump2nextcloud/mysqldump2nextcloud`
   
 You can have a second task, to be able to have a "daily" backup above the first ones, by adding the "daily" parameter to the script :
-`01 0 * * * /usr/local/share/mysqdump2nextcloud/mysqldump2nextcloud daily`
+`01 0 * * * /usr/local/share/mysqldump2nextcloud/mysqldump2nextcloud daily`
   
 With these 2 lines, you'll have a new "classic" dump every 30 minutes, and, at 00h01 a new "daily" backup.
 The daily backups will be deleted every $EXPIRATIONDAILY days, while "classic" dumps will be deleted every $EXPIRATION minutes.
