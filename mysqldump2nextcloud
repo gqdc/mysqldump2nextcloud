@@ -55,7 +55,7 @@ fi
 if [ $1 ] && [ $1 = "daily" ]; then
     find $LOCALDUMPSDIR -type f -name '*-daily.sql.gz' -atime +$EXPIRATIONDAILY -delete
 else
-    find $LOCALDUMPSDIR -type f -name '*.sql.gz' ! -name "*-daily.sql.gz" -atime +$EXPIRATION -delete
+    find $LOCALDUMPSDIR -type f -name '*.sql.gz' ! -name "*-daily.sql.gz" -amin +$EXPIRATION -delete
 fi
 
 ## Dump creation
