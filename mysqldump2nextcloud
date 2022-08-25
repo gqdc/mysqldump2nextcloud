@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Date format used in dump filename. Default is : dd-mm-YYYY-HHMM
-CLEARDATE=$(date +%d)-$(date +%m)-$(date +%Y)-$(date +%H)$(date +%M)
+CLEARDATE= $(date "+%d-%m-%Y-%H%M")
 
 # Log's file
 LOGDIR="/usr/local/share/mysqldump2nextcloud/log"
