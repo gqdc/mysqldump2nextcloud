@@ -13,7 +13,7 @@ git clone https://github.com/gqdc/mysqldump2nextcloud.git
 `chmod +X /usr/local/share/mysqdump2nextcloud/mysqldump2nextcloud`
 6. Run the script and correct any errors.
 7. Add new line in your crontab to automate the script :
-`*/30 * * * * /usr/local/share/mysqdump2nextcloud/mysqldump2nextcloud`
+`*/30 * * * * /usr/local/share/mysqldump2nextcloud/mysqldump2nextcloud`
   
 You can have a second task, to be able to have a "daily" backup above the first ones, by adding the "daily" parameter to the script :
 `01 0 * * * /usr/local/share/mysqldump2nextcloud/mysqldump2nextcloud daily`
